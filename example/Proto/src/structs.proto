@@ -1,0 +1,359 @@
+syntax = "proto3";
+package pb;
+option go_package = ".;pb";
+
+// 本proto仅用来于定义数据结构
+
+// 硬件信息和Unity保持一致
+message SystemInfo {
+  // A unique device identifier. It is guaranteed to be unique for every device
+  string deviceUniqueIdentifier = 1;
+  // New: 设备型号
+  string deviceModel = 2;
+  // The user defined name of the device
+  string deviceName = 3;
+  // Returns the kind of device the application is running on
+  string deviceType = 4;
+  // Operating system name with version
+  string operatingSystem = 5;
+  // Returns the operating system family the game is running on
+  string operatingSystemFamily = 6;
+  // New: 操作系统版本，单位MB
+  string systemMemorySize = 7;
+  // Processor name
+  string processorType = 8;
+  // Processor frequency in MHz
+  string processorFrequency = 9;
+  // Number of processors present
+  string processorCount = 10;
+  // The graphics API type and driver version used by the graphics device
+  string graphicsDeviceVersion = 11;
+  // The graphics API type used by the graphics device
+  string graphicsDeviceType = 12;
+  // The name of the graphics device
+  string graphicsDeviceName = 13;
+  // Amount of video memory present
+  string graphicsMemorySize = 14;
+}
+
+// 玩家
+message Player {
+  // 角色名字
+  string name = 1;
+  // ID
+  string id = 2;
+  // 连续登录天数
+  int32 loginDays = 3;
+  // 0:正常  1：玩家被禁用   3：不允许登录  4：被T掉下线
+  int32 status = 4;
+  // 主线关卡进度
+  int32 progress = 5;
+  // 背包信息
+  PackSack packSack = 6;
+  // 完成的事件
+  repeated int32 incident = 7;
+  // 玩家等级
+  int32 playerLv = 8;
+  // 村等级
+  int32 envLv = 9;
+  // 正在培养的农畜物
+  map<int32, Farming> farm = 10;
+}
+
+// 怪物
+message Monster {
+  // 唯一ID
+  int32 id = 1;
+  // 所属块ID
+  int32 gid = 2;
+  // 配置ID
+  int32 cid = 3;
+  // 是否是虚影
+  repeated int64 virtuals = 4;
+}
+
+message Vector3 {
+  float x = 1;
+  float y = 2;
+  float z = 3;
+}
+
+message Vector3Int {
+  int32 x = 1;
+  int32 y = 2;
+  int32 z = 3;
+}
+
+// 位置
+message Position {
+  // 对象类型（hero = 1, npc = 2, monster = 3, item = 4）
+  int32 type = 1;
+  // 对象ID（Item取所属格子ID）
+  int64 id = 2;
+  // 位置
+  Vector3 position = 3;
+  // 旋转（欧拉角）
+  Vector3 rotation = 4;
+  // 耗时
+  float time = 5;
+}
+
+// 角色状态
+message RoleState {
+  // 角色类型（hero = 1, npc = 2, monster = 3）
+  int32 type = 1;
+  // 角色ID
+  int64 id = 2;
+  // 动作序号
+  optional int32 index = 3;
+  // 动作速度
+  optional float speed = 4;
+  // 交互模式
+  optional int32 mode = 5;
+  // 工具ID
+  optional int32 tool = 6;
+}
+
+// 物品状态
+message ItemState {
+  // 格子ID
+  int64 id = 1;
+  // 血量
+  optional int32 hp = 2;
+  // 锁定状态
+  optional bool lock = 3;
+}
+
+// 地图
+message Map {
+  string mapPath = 1;
+  optional int32 coord = 2;
+}
+
+// 射击
+message Shoot {
+  // 攻击者类型（hero = 1, npc = 2, monster = 3）
+  int32 type = 1;
+  // 攻击者ID
+  int64 id = 2;
+  // 子弹配置ID
+  optional int32 bullet = 3;
+  // 发射点
+  optional Vector3 startPos = 4;
+  // 射击点
+  optional Vector3 endPos = 5;
+  // 发射方向
+  optional Vector3 dirction = 6;
+}
+
+// 攻击信息
+message Attack {
+  // 攻击者类型（hero = 1, npc = 2, monster = 3）
+  int32 attackType = 1;
+  // 攻击者ID
+  int64 attackId = 2;
+  // 被攻击者类型（hero = 1, npc = 2, monster = 3, item = 4）
+  int32 hitType = 3;
+  // 被攻击者ID（item取所属格子ID）
+  int64 hitId = 4;
+}
+
+// Buff
+message Buff {
+  // 释放者类型（hero = 1, npc = 2, monster = 3）
+  optional int32 type = 1;
+  // 释放者ID
+  optional int64 id = 2;
+  // Buff的配置ID
+  int32 cid = 3;
+}
+
+// 好感物品
+message FavorGift {
+  // 配置ID
+  int32 id = 1;
+  // 数量
+  int32 count = 2;
+  // 状态码: 1: 小好感物  2: 中好感物  3: 大好感物
+  int32 state = 3;
+}
+
+// 掉落物
+message DropItem {
+  // 配置ID
+  int32 id = 1;
+  // 数量
+  int32 count = 2;
+}
+
+// 珠子
+message Bead {
+  int32 id = 1;
+  // 配置ID
+  int32 cid = 2;
+  // 属性增幅[属性id - 增幅值]
+  map<int32, float> attributes = 3;
+  // 被动技能
+  int32 skill = 4;
+}
+
+// 装备
+message Equip {
+  // 背包中的生成id(IDGen)
+  int32 id = 1;
+  // 配置ID
+  int32 cid = 2;
+  // 已装备珠子
+  repeated int32 beads = 3;
+  // 被动技能
+  optional int32 skill = 4;
+}
+
+// 农畜物
+message Crop {
+  int32 id = 1;
+  // 配置ID
+  int32 cid = 2;
+  repeated int32 entry = 3;
+}
+
+// 图纸
+message Draw {
+  // 配置ID
+  int32 id = 1;
+  // 图纸是否完美
+  bool delicious = 2;
+  // 图纸状态码: 0: 食材不足  1: 可做  2: 等级不足 4: 图纸编号错误
+  int32 status = 3;
+}
+
+//背包
+message PackSack {
+  map<int32, int32> props = 1;     //道具
+  map<int32, Equip> equips = 2;    //装备
+  map<int32, Bead> beads = 3;      //珠子
+  map<int32, Crop> crop = 4;       //农畜物
+  map<int32, int32> currency = 5;  //货币
+  map<int32, int32> food = 6;      //货币
+}
+
+message RetrItems {
+  int32 id = 1;
+  int32 amount = 2;
+  int32 price = 3;
+  int32 status = 4;
+}
+// 找回物
+message RetrieveItem {
+  // 物品ID
+  int32 id = 1;
+  // 找回价格
+  int32 price = 2;
+  // 物品数量
+  int32 count = 3;
+  // 找回状态码: 0: 不可找回  1: 可找回
+  int32 state = 4;
+}
+
+// 种植
+message Farming {
+  Crop crop = 1;                     //当前农畜物信息
+  int64 startTime = 2;               //播种的位置
+  int32 plantTime = 3;               //剩余研究时间
+  int32 Seat = 4;                    //种植的位置
+  map<int32, int32> fertilizer = 5;  //肥料的id和数量
+  repeated Crop pollination = 6;     //传粉
+}
+
+// 系统邮件
+message GameMail {
+  string id = 1;
+  string title = 2;
+  string content = 3;
+  // ID COUNT
+  map<int32, int32> rewards = 4;
+  int64 time = 5;
+}
+
+// 玩家邮件
+message PlayerMail {
+  string id = 1;
+  string title = 2;
+  string content = 3;
+  // ID COUNT
+  map<int32, int32> rewards = 4;
+  int64 time = 5;
+  string sender = 6;
+}
+
+// 广场玩家
+message SquarePlayer {
+  string name = 1;
+  // 玩家ID
+  int64 id = 2;
+  // 玩家的衣服
+  repeated int32 clothes = 3;
+  // 所在队伍ID
+  optional string teamId = 4;
+  optional Position position = 5;
+}
+
+// 广场
+message Square {
+  string id = 1;
+  repeated SquarePlayer players = 2;  //玩家ID和玩家信息
+}
+
+// 队伍任务
+message TeamTask {
+  int64 id = 1;
+  // 配置ID
+  int64 cid = 2;
+}
+
+// 队伍
+message Team {
+  // 队伍ID
+  string id = 1;
+  // 队伍玩家ID  在广场就获取广场的玩家  再探索获取探索玩家
+  repeated int64 players = 2;
+  // 当前队伍队长
+  int64 captain = 3;
+  // 队伍目标
+  repeated TeamTask tasks = 4;
+}
+
+// 制作零件 fabricatingPart
+message FabPart {
+  //制作的零件ID : 数量
+  map<int32, int32> result = 1;
+}
+
+// 制作块
+message FabBlock {
+  //制作的块ID : 数量
+  map<int32, int32> result = 1;
+}
+
+// 制作装备
+message FabEquip {
+  // 装备属性及ID
+  repeated Equip equip = 1;
+}
+
+// 制作珠子
+message FabBead {
+  // 珠子属性及ID
+  repeated Bead bead = 1;
+}
+
+// 查询制作
+message MapFieldEntry {
+  //一个制作槽，由多个不同完成时间的物品组成
+  int32 type = 1;
+  int32 mid = 2;
+  int32 did = 3;
+  int32 finished = 4;
+  int64 start_time = 5;
+  int32 total = 6;
+}

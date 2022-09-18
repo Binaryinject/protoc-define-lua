@@ -1,0 +1,94 @@
+syntax = "proto3";
+package pb;
+option go_package = ".;pb";
+
+import "structs.proto";
+
+/*
+  书写规范：
+  1、数据结构统一定义到 structs.proto
+  2、路由最后字段的命名：需加"_cs"、"_sc"或者"_sync"以区分发送者
+  3、接口命名：路由后两个字段拼接而成，单词首字母大写
+  5、非推送接口尽量不做省略，尽量保持CS -> SC的对应
+  6、对变量的注释最好不要写在同一行后面；注释太长可以在变量前面多分几行进行注释
+*/
+
+// 广场匹配
+//@room.square.match_cs = pb.Square_Match_CS
+message Square_Match_CS {
+  // 广场类型
+  int32 type = 1;
+}
+
+// 广场匹配
+//@room.square.match_sc = pb.Square_Match_SC
+message Square_Match_SC {
+  Square square = 1;
+}
+
+// 广场玩家位置
+//@room.square.position_cs = pb.Square_Position_CS
+message Square_Position_CS {
+  Position position = 1;
+}
+
+// 广场玩家位置
+//@room.square.position_sc = pb.Square_Position_SC
+message Square_Position_SC {
+  string code = 1;
+}
+
+// 广场玩家位置的广播
+//@room.square.position_sync = pb.Square_Position_Sync
+message Square_Position_Sync {
+  repeated Position positions = 1;
+}
+
+// 广场角色状态
+//@room.square.rolestate_cs = pb.Square_RoleState_CS
+message Square_RoleState_CS {
+  RoleState state = 1;
+}
+
+// 广场角色状态
+//@room.square.rolestate_sc = pb.Square_RoleState_SC
+message Square_RoleState_SC {
+  string code = 1;
+}
+
+// 广场角色状态的广播
+//@room.square.rolestate_sync = pb.Square_RoleState_Sync
+message Square_RoleState_Sync {
+  RoleState state = 1;
+}
+
+// 广场玩家退出
+//@room.square.exit_cs = null
+//@room.square.exit_sc = pb.Square_Exit_SC
+message Square_Exit_SC {
+  string code = 1;
+}
+
+// 玩家进入的广播
+//@room.square.enter_sync = pb.Square_Enter_Sync
+message Square_Enter_Sync {
+  SquarePlayer player = 1;
+}
+
+// 玩家退出的广播
+//@room.square.exit_sync = pb.Square_Exit_Sync
+message Square_Exit_Sync {
+  // 玩家ID
+  int64 id = 1;
+}
+
+// 接受任务
+//@room.square.acceptask_cs = pb.Square_AcceptTask_CS
+message Square_AcceptTask_CS {
+  int32 id = 1;
+}
+
+//@room.square.acceptask_sc = pb.Square_AcceptTask_SC
+message Square_AcceptTask_SC {
+  string code = 1;
+}
