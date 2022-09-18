@@ -3,7 +3,7 @@ The emmylua protobuf description generator
 
 ## Technical details
 * .NetCore 6.0 runtime.
-* Use clang-format to format lua.
+* Use clang-format to format proto.
 * All commit support(field and class).
 * begin `//@` define proto id or route id. (see example)
 
