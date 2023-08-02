@@ -36,7 +36,7 @@ foreach (var t in files) {
     var regexComment = new Regex(@"\s*//\s*(?<comment>.+)");
     var regexMap = new Regex(@"map<(?<type1>.+),\s*(?<type2>.+)>\s*(?<name>.+)=\s*(?<index>\d+)\s*;");
     var regexField = new Regex(@"(?<type>.+)\s(?<name>.+)=\s(?<index>\d+)\s*;");
-    var regexMessage = new Regex(@"(?<comment>/*[.\s\S]*?)message(?<class>[.\s\S]*?){(?<content>[.\s\S]*?)}", RegexOptions.Multiline);
+    var regexMessage = new Regex(@"(?<comment>/*[.\s\S]*?)^message(?<class>[.\s\S]*?){(?<content>[.\s\S]*?)}", RegexOptions.Multiline);
     foreach (Match matchFile in regexMessage.Matches(File.ReadAllText(t))) {
         var comment = matchFile.Groups["comment"].Value;
         var classComment = "";
